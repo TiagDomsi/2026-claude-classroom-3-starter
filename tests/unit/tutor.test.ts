@@ -1,8 +1,10 @@
 // @vitest-environment node
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, expect, test, vi } from "vitest";
+
+import { removeTempDir } from "./temp-dir";
 
 // The `server-only` package resolves to its throwing build outside Next.js;
 // nothing here needs what it guards.
@@ -23,7 +25,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   vi.unstubAllEnvs();
-  await rm(dir, { recursive: true, force: true });
+  await removeTempDir(dir);
 });
 
 test("a dev hot reload rebuilds the agent but keeps the connection", async () => {
